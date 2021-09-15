@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,8 +16,12 @@ int main(int argc, char *argv[])
     char buff[4096];
     
     if (argc < 2) {
-        printf("mycat please filename\n");
-        exit(1);
+        readcnt = read(STDIN_FILENO, buff, 10);
+        if (readcnt < 0) {
+            perror("read STDIN_FILENO");
+            exit(1);
+        }
+        write(STDOUT_FILENO, buff, readcnt);
     }
 
     fd = open(argv[1], O_RDONLY); //打开文件并设置只读模式，记录该文件的设备描述符	
