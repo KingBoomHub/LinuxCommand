@@ -14,18 +14,17 @@ void sys_err(char *str, int errnum)
     exit(errnum);
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
     int fd;
     char str[4096];
     int cnt;
 
-    if (argc < 2) {
-        printf("please fill file\n");
-        exit(1);
-    }
+    if ((access("myfifo", F_OK)) == -1) {
+        mkfifo("myfifo", 0644);
+    } 
 
-    fd = open(argv[1], O_RDONLY); //打开管道(Linux下一切揭文件)
+    fd = open("myfifo", O_RDONLY); //打开管道(Linux下一切揭文件)
     if (fd < 0) {
         sys_err("open", 1);
     }
